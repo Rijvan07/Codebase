@@ -10,7 +10,7 @@ function App() {
     <>
      <Routes>
         {/* <Route path='/' element={<Home/>} /> */}
-        <Route path='/forgotpasswordy' element={<ForgotPassword />} />
+        <Route path='/' element={<ForgotPassword />} />
       </Routes>
     </>
   )
