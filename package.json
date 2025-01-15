@@ -1,10 +1,13 @@
 {
+  "homepage":"https://Rijvan07.github.io/Codebase",
   "name": "forgot-password",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "predeploy":"vite build",
+    "deploy":"gh-pages -d build",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
