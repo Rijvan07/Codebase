@@ -10,12 +10,13 @@ const SignupForm = () => {
     const [success, setSuccess] = useState(false);
     const [user, setUser] = useState({});
     const [isUserValid, setIsUserValid] = useState(false);
+    const [isPasschanged, setIsPasschanged] = useState(false);
 
-  const location = useLocation();
-  
-  const queryParams = new URLSearchParams(location.search);
+    const location = useLocation();
 
-  const searchTerm = queryParams.get('user_id'); 
+    const queryParams = new URLSearchParams(location.search);
+
+    const searchTerm = queryParams.get('user_id');
 
     const validateForm = () => {
         const newErrors = {};
@@ -42,13 +43,14 @@ const SignupForm = () => {
         // return;
         // }
         const userDetails = {
-            email: email,
+            email: user?.email,
             password: password
         }
         try {
-            const response = await axios.post('http://localhost:5000/forgot_password/forgot_password', userDetails);
+            const response = await axios.patch('http://127.0.0.1:5000/generate_password/generate_password', userDetails);
             if (response.data.status) {
                 alert(response.data.message);
+                setIsPasschanged(true)
             } else {
                 alert(response.data.message);
             }
@@ -66,6 +68,7 @@ const SignupForm = () => {
                 // alert(response.data.message);
                 setIsUserValid(true);
                 console.log(response.data)
+                setUser(response.data.data[0]);
             } else {
                 alert(response.data.message);
             }
@@ -84,63 +87,75 @@ const SignupForm = () => {
     return (
         <div className="signup-form-container">
             <div className="signup-form-box">
-                <h2>Create an Account</h2>
                 {
-                    isUserValid ? <>
-                        <form onSubmit={handleSubmit}>
-                            <div className="input-group">
-                                <label htmlFor="email">Email Address</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    required
-                                />
-                                {errors.email && <p className="error-message">{errors.email}</p>}
-                            </div>
+                    isPasschanged ? <>
 
-                            <div className="input-group">
-                                <label htmlFor="password">Password</label>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                />
-                                {errors.password && <p className="error-message">{errors.password}</p>}
-                            </div>
-
-                            <div className="input-group">
-                                <label htmlFor="confirm-password">Confirm Password</label>
-                                <input
-                                    type="password"
-                                    id="confirm-password"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    required
-                                />
-                                {errors.confirmPassword && (
-                                    <p className="error-message">{errors.confirmPassword}</p>
-                                )}
-                            </div>
-
-                            {success && <p className="success-message">Account created successfully!</p>}
-
-                            <button type="submit" disabled={loading} className="submit-btn">
-                                {loading ? 'Creating Account...' : 'Create Account'}
-                            </button>
-                        </form>
-                    </> : <>
                         <div className="">
-                            <strong>
-                                Unable to find user try after some time!
-                            </strong>
+                            <h3>
+                                Your password has been changed successfully! please check your mail...
+                            </h3>
                         </div>
+                    </> : <>
+
+                        <h2>Create an Account</h2>
+                        {
+                            isUserValid ? <>
+                                <form onSubmit={handleSubmit}>
+                                    <div className="input-group">
+                                        <label htmlFor="email">Email Address</label>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            value={user?.email}
+                                            // onChange={(e) => setEmail(e.target.value)}
+                                            readOnly
+                                        />
+                                        {errors.email && <p className="error-message">{errors.email}</p>}
+                                    </div>
+
+                                    <div className="input-group">
+                                        <label htmlFor="password">Password</label>
+                                        <input
+                                            type="password"
+                                            id="password"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            required
+                                        />
+                                        {errors.password && <p className="error-message">{errors.password}</p>}
+                                    </div>
+
+                                    <div className="input-group">
+                                        <label htmlFor="confirm-password">Confirm Password</label>
+                                        <input
+                                            type="password"
+                                            id="confirm-password"
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                            required
+                                        />
+                                        {errors.confirmPassword && (
+                                            <p className="error-message">{errors.confirmPassword}</p>
+                                        )}
+                                    </div>
+
+                                    {success && <p className="success-message">Account created successfully!</p>}
+
+                                    <button type="submit" disabled={loading} className="submit-btn">
+                                        {loading ? 'Creating Account...' : 'Create Account'}
+                                    </button>
+                                </form>
+                            </> : <>
+                                <div className="">
+                                    <strong>
+                                        Unable to find user try after some time!
+                                    </strong>
+                                </div>
+                            </>
+                        }
+
                     </>
                 }
-
             </div>
         </div>
     );
