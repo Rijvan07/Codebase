@@ -61,7 +61,7 @@ const SignupForm = () => {
 
     const getUser = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/get_user/get_user/${searchTerm}`);
+            const response = await axios.get(`http://127.0.0.1:5000/get_user/get_user/${searchTerm}`);
             if (response.data.status) {
                 // alert(response.data.message);
                 setIsUserValid(true);
